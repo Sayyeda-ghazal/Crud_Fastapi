@@ -9,6 +9,9 @@ A robust Book Management System built with FastAPI, SQLAlchemy, and JWT authenti
 - [Endpoints](#endpoints)
 - [Authentication](#authentication)
 - [License](#license)
+- [Database Configuration]
+- [Database Models]
+- [Postgresql and API Testing]
 
 ---
 
