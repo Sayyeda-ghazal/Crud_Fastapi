@@ -2,6 +2,7 @@
 
 A robust Book Management System built with FastAPI, SQLAlchemy, and JWT authentication. The API provides features for user authentication, and CRUD operations for managing books.
 
+
 ## Table of Contents
 - [Features](#features)
 - [Installation](#installation)
@@ -9,9 +10,9 @@ A robust Book Management System built with FastAPI, SQLAlchemy, and JWT authenti
 - [Endpoints](#endpoints)
 - [Authentication](#authentication)
 - [License](#license)
-- [Database Configuration](#Database Configuration)
-- [Database Models]
-- [Postgresql and API Testing]
+- [Database Configuration](#database-configuration)
+- [Database Models](#database-models)
+- [PostgreSQL and API Testing](#postgresql-and-api-testing)
 
 ---
 
