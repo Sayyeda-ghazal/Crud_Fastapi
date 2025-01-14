@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 import auth
 import random
 import string
-from auth import get_current_user, get_db
+from auth import get_db , login_user
 from starlette import status
 from typing import Annotated
 
@@ -16,7 +16,7 @@ app.include_router(auth.router)
 Base.metadata.create_all(engine)
 
 db_dependency = Annotated[Session, Depends(get_db)]
-user_dependency = Annotated[str, Depends(get_current_user)]  
+user_dependency = Annotated[str, Depends(login_user)]
 
 def getsession():
     session = SessionLocal()
@@ -32,21 +32,21 @@ fakeBOOKdata = {
 }
 
 @app.get("/books")
-def book(session: Session = Depends(getsession), user: str = Depends(get_current_user)):
+def book(session: Session = Depends(getsession)): 
     books = session.query(models.Book).all()
     if not books:
         raise HTTPException(status_code=404, detail="No books found")
     return books
 
 @app.get("/books/{id}")
-def getbook(id: int = Path(title='The ID of the book', gt=0), session: Session = Depends(getsession), user: str = Depends(get_current_user)):
+def getbook(id: int = Path(title='The ID of the book', gt=0), session: Session = Depends(getsession)): 
     book = session.query(models.Book).get(id)
     if not book:
         raise HTTPException(status_code=404, detail=f"Book with ID {id} not found")
     return book
 
 @app.post("/books")
-def addbook(item: schemas.Book, session: Session = Depends(getsession), user: str = Depends(get_current_user)):
+def addbook(item: schemas.Book, session: Session = Depends(getsession)): 
     existing_book = session.query(models.Book).filter(models.Book.task == item.task).first()
     if existing_book:
         raise HTTPException(status_code=400, detail=f"Book with name {item.task} already exists")
@@ -57,7 +57,7 @@ def addbook(item: schemas.Book, session: Session = Depends(getsession), user: st
     return book
 
 @app.put("/books/{id}")
-def updatebook(id: int, item: schemas.Book, session: Session = Depends(getsession), user: str = Depends(get_current_user)):
+def updatebook(id: int, item: schemas.Book, session: Session = Depends(getsession)): 
     bookobj = session.query(models.Book).get(id)
     if not bookobj:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -67,7 +67,7 @@ def updatebook(id: int, item: schemas.Book, session: Session = Depends(getsessio
     return bookobj
 
 @app.delete("/books/{id}")
-def deletebook(id: int, session: Session = Depends(getsession), user: str = Depends(get_current_user)):
+def deletebook(id: int, session: Session = Depends(getsession)): 
     bookobj = session.query(models.Book).get(id)
     if not bookobj:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -84,8 +84,8 @@ async def request_id_logging(request: Request, call_next):
     response.headers["X-Request-ID"] = random_letters
     return response
 
-@app.get("/user", status_code=status.HTTP_200_OK)
-async def user(user: user_dependency, db: db_dependency):
-    if user is None:
-        raise HTTPException(status_code=401, detail='Authentication failed')
-    return {"user": user}
+# @app.get("/user", status_code=status.HTTP_200_OK) 
+# async def user( db: db_dependency):
+#     if user is None:
+#         raise HTTPException(status_code=401, detail='Authentication failed')
+#     return {"user": user}
