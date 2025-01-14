@@ -1,6 +1,7 @@
 from sqlalchemy import  Column, Integer, String
 from database import Base
 
+
 class Book(Base):
     __tablename__ ="book"
 
@@ -12,4 +13,7 @@ class Users(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True)
-    hashed_password = Column(String)
+    password = Column(String)
+    email = Column(String, unique=True, nullable=False)
+
+
