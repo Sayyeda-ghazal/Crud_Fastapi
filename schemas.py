@@ -3,7 +3,7 @@ from pydantic import BaseModel , Field, validator, EmailStr
 class Book(BaseModel):
     task : str = Field(description="Name of product", min_length=3, max_length=20)
     class Config:
-        orm_mode = True
+        from_attributes = True
 
     @validator('task')
     def check_for_numbers(cls, value):
@@ -24,3 +24,10 @@ class createuserrequest(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class Users(BaseModel):
+    username : str
+    password : str
+    email : str
+    class Config:
+        from_attributes = True
