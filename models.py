@@ -16,4 +16,3 @@ class Users(Base):
     password = Column(String)
     email = Column(String, unique=True, nullable=False)
 
-
