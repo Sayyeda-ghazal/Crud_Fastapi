@@ -11,11 +11,21 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt, JWTError
 import models, schemas
 from schemas import createuserrequest, login
+from dotenv import load_dotenv
+import os
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 
-SECRET_KEY = '7f9c2ba4b65e0c5ad3d4f8fae9c3e9f0f97db6bc1b43a9f9b321fd36a561cbd8'
-ALGORITHM = 'HS256' 
+load_dotenv(dotenv_path=".env")
+
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG_MODE = os.getenv("DEBUG", "False") == "True"
+
+ALGORITHM = os.getenv("ALGORITHM")
+
+
+
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated = 'auto')
 outh2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
@@ -95,6 +105,7 @@ def login_user(user: login, session: Session = Depends(get_db)):
 
     return { "access_token": access_token, "token_type": "bearer", "username": db_user.username, "email": db_user.email}
 
+
 @router.get("/")
 
 def book(session: Session = Depends(get_db),current_user: Users = Depends(get_current_user)): 
@@ -105,6 +116,7 @@ def book(session: Session = Depends(get_db),current_user: Users = Depends(get_cu
         raise HTTPException(status_code=404, detail="No books found")
 
     return books
+
 
 @router.get("/books/{id}")
 
@@ -186,7 +198,3 @@ def query_model(model_name: str, session: Session = Depends(get_db)):
     result = get_model_query(model_name, session)
     
     return result
-
-
-
-
