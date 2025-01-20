@@ -18,3 +18,6 @@ config ={
 # print(os.getenv("COMBINED"))
 
 # print(os.getenv("MAIL"))
+
+
+#crud main :
