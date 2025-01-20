@@ -1,23 +1,19 @@
-import os
-from dotenv import load_dotenv, dotenv_values
-
-load_dotenv()
-
-
-config = dotenv_values(".env")
-print(config)
+from fastapi import FastAPI,  Request
+from database import Base, engine
+import auth, random, string
 
 
-config ={ 
-    **dotenv_values(".env.shared"),
-    **dotenv_values(".env.secret")
+app = FastAPI()
+app.include_router(auth.router)  
 
-}
-# print(os.getenv("MY_SECRET_KEY"))
-
-# print(os.getenv("COMBINED"))
-
-# print(os.getenv("MAIL"))
+Base.metadata.create_all(engine)
 
 
-#crud main :
+@app.middleware("http")
+async def request_id_logging(request: Request, call_next):
+    response = await call_next(request)
+    random_letters = ''.join(random.choice(string.ascii_letters) for _ in range(10))
+    print(f'Log {random_letters}')
+    response.headers["X-Request-ID"] = random_letters
+    return response
+
